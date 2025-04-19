@@ -9,10 +9,13 @@ const nextConfig = {
     // Add any env vars that should be available to client components here
   },
   
+  // Output configuration for better deployment compatibility
+  output: 'standalone',
+  
   // Use server actions for API calls
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000']
+      allowedOrigins: ["*"]
     }
   },
 };
