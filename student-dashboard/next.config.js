@@ -11,7 +11,9 @@ const nextConfig = {
   
   // Use server actions for API calls
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000']
+    }
   },
 };
 

@@ -318,12 +318,9 @@ export default function AIEssayCoachPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="essay-type">Essay Type</Label>
-                  <Select
-                    value={essayType}
-                    onValueChange={setEssayType}
-                  >
-                    <SelectTrigger id="essay-type">
-                      <SelectValue placeholder="Select essay type" />
+                  <Select value={essayType} onValueChange={setEssayType}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{essayType || "Select essay type"}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="analytical">Analytical Essay</SelectItem>

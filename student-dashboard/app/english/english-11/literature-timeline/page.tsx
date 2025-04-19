@@ -1,58 +1,46 @@
-import React from "react";
+'use client';
+
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Info } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { BookOpen } from "lucide-react";
 
-interface TimelinePeriod {
+interface Period {
   id: string;
   name: string;
   years: string;
   description: string;
-  keyAuthors: string[];
-  keyWorks: string[];
+  authors: Author[];
 }
 
-export default function LiteratureTimelinePage() {
-  const periods: TimelinePeriod[] = [
+interface Author {
+  name: string;
+  works: string[];
+  description: string;
+}
+
+export default function LiteratureTimeline() {
+  const [activeTab, setActiveTab] = useState("colonial");
+
+  const periods: Period[] = [
     {
       id: "colonial",
-      name: "Colonial and Early National Period",
-      years: "1607-1830",
-      description: "Literature from the early settlements through the Revolutionary War and early Republic, characterized by religious and political writings.",
-      keyAuthors: ["Anne Bradstreet", "Benjamin Franklin", "Thomas Jefferson", "Washington Irving"],
-      keyWorks: ["Common Sense", "The Declaration of Independence", "The Federalist Papers", "Rip Van Winkle"]
-    },
-    {
-      id: "romanticism",
-      name: "American Romanticism",
-      years: "1830-1865",
-      description: "Emphasized emotion, individualism, and the glorification of nature and the past, particularly medieval.",
-      keyAuthors: ["Edgar Allan Poe", "Nathaniel Hawthorne", "Herman Melville", "Walt Whitman", "Emily Dickinson"],
-      keyWorks: ["The Scarlet Letter", "Moby-Dick", "Leaves of Grass", "The Raven"]
-    },
-    {
-      id: "realism",
-      name: "Realism and Naturalism",
-      years: "1865-1914",
-      description: "Post-Civil War literature characterized by detailed realism and exploration of social issues.",
-      keyAuthors: ["Mark Twain", "Henry James", "Kate Chopin", "Stephen Crane", "Jack London"],
-      keyWorks: ["Adventures of Huckleberry Finn", "The Awakening", "The Red Badge of Courage"]
-    },
-    {
-      id: "modernism",
-      name: "Modernism",
-      years: "1914-1945",
-      description: "Marked by a break with traditional forms and optimism, reflecting the disillusionment following World War I.",
-      keyAuthors: ["F. Scott Fitzgerald", "Ernest Hemingway", "William Faulkner", "John Steinbeck", "Langston Hughes"],
-      keyWorks: ["The Great Gatsby", "The Sun Also Rises", "The Sound and the Fury", "The Grapes of Wrath"]
-    },
-    {
-      id: "postwar",
-      name: "Postwar and Contemporary",
-      years: "1945-Present",
-      description: "Diverse literature reflecting the social changes and cultural shifts of the latter 20th century to present day.",
-      keyAuthors: ["J.D. Salinger", "Toni Morrison", "Maya Angelou", "Ralph Ellison", "Sandra Cisneros"],
-      keyWorks: ["The Catcher in the Rye", "Beloved", "I Know Why the Caged Bird Sings", "Invisible Man", "The House on Mango Street"]
+      name: "Colonial Period",
+      years: "1607-1775",
+      description: "Literature focused on religious and practical themes, reflecting Puritan values and early American experiences.",
+      authors: [
+        {
+          name: "Anne Bradstreet",
+          works: ["The Tenth Muse Lately Sprung Up in America", "To My Dear and Loving Husband"],
+          description: "First published female poet in the American colonies."
+        },
+        {
+          name: "Jonathan Edwards",
+          works: ["Sinners in the Hands of an Angry God"],
+          description: "Prominent Puritan minister and theologian."
+        }
+      ]
     }
   ];
 
@@ -65,12 +53,12 @@ export default function LiteratureTimelinePage() {
             American Literature Timeline
           </CardTitle>
           <CardDescription>
-            Explore the major periods of American literature, their characteristics, and notable authors
+            Explore the major periods of American literature and their notable authors
           </CardDescription>
         </CardHeader>
       </Card>
 
-      <Tabs defaultValue="colonial" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-4">
           {periods.map((period) => (
             <TabsTrigger key={period.id} value={period.id}>
@@ -83,34 +71,28 @@ export default function LiteratureTimelinePage() {
           <TabsContent key={period.id} value={period.id}>
             <Card>
               <CardHeader>
-                <CardTitle className="flex justify-between items-center">
-                  <span>{period.name}</span>
-                  <span className="text-sm font-normal text-muted-foreground">{period.years}</span>
-                </CardTitle>
+                <CardTitle>{period.name} ({period.years})</CardTitle>
+                <CardDescription>{period.description}</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="font-semibold flex items-center gap-1 mb-2">
-                    <Info className="h-4 w-4" /> Overview
-                  </h3>
-                  <p>{period.description}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Key Authors</h3>
-                  <ul className="list-disc pl-5">
-                    {period.keyAuthors.map((author, i) => (
-                      <li key={i}>{author}</li>
+              <CardContent>
+                <ScrollArea className="h-[400px] pr-4">
+                  <div className="space-y-6">
+                    {period.authors.map((author, index) => (
+                      <div key={index} className="space-y-2">
+                        <h3 className="text-lg font-semibold">{author.name}</h3>
+                        <p className="text-muted-foreground">{author.description}</p>
+                        <div className="pl-4">
+                          <h4 className="text-sm font-medium mb-2">Notable Works:</h4>
+                          <ul className="list-disc pl-4 space-y-1">
+                            {author.works.map((work, workIndex) => (
+                              <li key={workIndex} className="text-sm">{work}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Notable Works</h3>
-                  <ul className="list-disc pl-5">
-                    {period.keyWorks.map((work, i) => (
-                      <li key={i}>{work}</li>
-                    ))}
-                  </ul>
-                </div>
+                  </div>
+                </ScrollArea>
               </CardContent>
             </Card>
           </TabsContent>
